@@ -63,10 +63,10 @@ class MyWindow(QMainWindow):
         self.line_email.clear()
         self.line_password.clear()
 
-    def greetings(self):
+    def greetings(self, user):
         """Greetings when logged in."""
 
-        self.label.setText(f"Hi, {self.line_email.text()}, you are successfully connected !")
+        self.label.setText(f"Bonjour, {user.first_name}, vous êtes bien connecté(e) !")
         self.label.adjustSize()
         self.line_email.clear()
         self.line_password.clear()
@@ -74,9 +74,9 @@ class MyWindow(QMainWindow):
     def login_api(self):
         """Slot to login to API."""
 
-        is_logged = login(email=self.line_email.text(), password=self.line_password.text())
+        is_logged, user = login(email=self.line_email.text(), password=self.line_password.text())
         if is_logged:
-            self.greetings()
+            self.greetings(user=user)
 
 
 

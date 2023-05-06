@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1351</width>
-    <height>843</height>
+    <width>1115</width>
+    <height>723</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Ventadesk</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
@@ -23,17 +23,9 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="conversation">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <attribute name="title">
-          <string>Messagerie</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tab_orders">
          <attribute name="title">
           <string>Toutes les commandes</string>
          </attribute>
@@ -48,8 +40,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>614</width>
-               <height>733</height>
+               <width>496</width>
+               <height>613</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -64,6 +56,72 @@
               </item>
              </layout>
             </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_conversation">
+         <attribute name="title">
+          <string>Conversation</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_conversation_title">
+            <property name="text">
+             <string>Sujet :</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QScrollArea" name="scrollArea_3">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_3">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>496</width>
+               <height>339</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <layout class="QVBoxLayout" name="message_list_container"/>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_new_message">
+            <property name="text">
+             <string>Nouveau message</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="new_message_edit">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_send_message">
+            <property name="text">
+             <string>Envoyer</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -108,8 +166,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>633</width>
-             <height>721</height>
+             <width>515</width>
+             <height>601</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -138,7 +196,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1351</width>
+     <width>1115</width>
      <height>21</height>
     </rect>
    </property>
