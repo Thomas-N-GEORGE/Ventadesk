@@ -113,10 +113,20 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1115, 21))
         self.menubar.setObjectName("menubar")
+        self.login_menu = QtWidgets.QMenu(parent=self.menubar)
+        self.login_menu.setObjectName("login_menu")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.loginAct = QtGui.QAction(parent=MainWindow)
+        self.loginAct.setObjectName("loginAct")
+        self.quitAct = QtGui.QAction(parent=MainWindow)
+        self.quitAct.setMenuRole(QtGui.QAction.MenuRole.QuitRole)
+        self.quitAct.setObjectName("quitAct")
+        self.login_menu.addAction(self.loginAct)
+        self.login_menu.addAction(self.quitAct)
+        self.menubar.addAction(self.login_menu.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -132,6 +142,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_conversation), _translate("MainWindow", "Conversation"))
         self.order_title.setText(_translate("MainWindow", "Détail de la commande"))
         self.update_status.setText(_translate("MainWindow", "Modifier le statut"))
+        self.login_menu.setTitle(_translate("MainWindow", "Connexion"))
+        self.loginAct.setText(_translate("MainWindow", "Se connecter"))
+        self.quitAct.setText(_translate("MainWindow", "Quitter"))
 
 
 if __name__ == "__main__":

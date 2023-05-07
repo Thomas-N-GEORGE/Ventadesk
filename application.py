@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QDialog,
     QLabel,
+    QMenuBar,
     QPushButton,
     QLineEdit,
     QTreeWidgetItem,
@@ -22,7 +23,7 @@ from PyQt6.QtWidgets import (
 
 
 from pui.if_ventadesk2 import Ui_MainWindow
-from status_dialog import StatusDialog
+from dialogs import StatusDialog, ConnectDialog
 
 from api_connect import login
 from orders_payload import ORDERS_PAYLOAD, CONVERSATION_PAYLOAD
@@ -32,13 +33,59 @@ class AppWindow(Ui_MainWindow, QMainWindow):
     """Render compiled to Python IF."""
 
     def __init__(self):
-        super().__init__()
-        self.setupUi(self)
+        """Initialize."""
 
-        # TODO
-        # self.setup_links()
+        super().__init__()
+        self.email = None
+        self.password = None
+        self.user = None
+        self.is_logged = False
+        self.abort_login = False
+        
+        self.login()    # show login dialog at start
+        
+        self.setupUi(self)
+        self.setup_links()
+        self.statusbar.showMessage(f'Non connecté(e)')
         self.tab_conversation.setEnabled(False)
-        self.load_orders(ORDERS_PAYLOAD)
+
+
+    def setup_links(self):
+        """Connect signals and slots."""
+
+        self.loginAct.triggered.connect(self.login_again)
+        self.quitAct.triggered.connect(self.close)
+
+    def login_again(self):
+        """login with other account."""
+
+        self.abort_login_toggle()
+        self.login()
+
+    def login(self):
+        """Enable login dialog."""
+
+        while not self.is_logged and not self.abort_login:
+            # open connect dialog box
+            connect_dialog = ConnectDialog(self)
+            connect_dialog.setModal(True)
+            connect_dialog.accepted.connect(self.api_login)
+            connect_dialog.rejected.connect(self.abort_login_toggle)
+            connect_dialog.exec()
+        
+    def abort_login_toggle(self):
+        """Login abort slot."""
+
+        self.abort_login = not self.abort_login
+
+    def api_login(self):
+        """Slot to login to API."""
+        
+        self.is_logged, self.user = login(email=self.email, password=self.password)
+        if self.is_logged:
+            self.statusbar.showMessage(f'Connecté(e), bienvenue {self.user.first_name}')
+            self.load_orders(ORDERS_PAYLOAD)
+
 
     def load_orders(self, orders: dict):
         """Populate orders."""

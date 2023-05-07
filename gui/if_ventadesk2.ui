@@ -200,8 +200,29 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="login_menu">
+    <property name="title">
+     <string>Connexion</string>
+    </property>
+    <addaction name="loginAct"/>
+    <addaction name="quitAct"/>
+   </widget>
+   <addaction name="login_menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="loginAct">
+   <property name="text">
+    <string>Se connecter</string>
+   </property>
+  </action>
+  <action name="quitAct">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
