@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1115</width>
-    <height>723</height>
+    <height>622</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,7 +41,7 @@
                <x>0</x>
                <y>0</y>
                <width>496</width>
-               <height>613</height>
+               <height>512</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -86,7 +86,7 @@
                <x>0</x>
                <y>0</y>
                <width>496</width>
-               <height>339</height>
+               <height>238</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -167,7 +167,7 @@
              <x>0</x>
              <y>0</y>
              <width>515</width>
-             <height>601</height>
+             <height>500</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -179,7 +179,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="update_status">
+         <widget class="QPushButton" name="btn_update_status">
           <property name="text">
            <string>Modifier le statut</string>
           </property>
@@ -212,7 +212,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="loginAct">
    <property name="text">
-    <string>Se connecter</string>
+    <string>Se (re) connecter</string>
    </property>
   </action>
   <action name="quitAct">
@@ -220,7 +220,7 @@
     <string>Quitter</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::QuitRole</enum>
+    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>

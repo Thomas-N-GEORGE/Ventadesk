@@ -64,9 +64,9 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QRadioButton" name="radio_status_NT">
+         <widget class="QRadioButton" name="radio_status_CR">
           <property name="text">
-           <string>Non traitée</string>
+           <string>Créée</string>
           </property>
          </widget>
         </item>

@@ -47,16 +47,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_cancel">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Annuler</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

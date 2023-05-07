@@ -26,10 +26,6 @@ class Ui_Dialog(object):
         self.btn_ok = QtWidgets.QPushButton(parent=Dialog)
         self.btn_ok.setObjectName("btn_ok")
         self.horizontalLayout.addWidget(self.btn_ok)
-        self.btn_cancel = QtWidgets.QPushButton(parent=Dialog)
-        self.btn_cancel.setEnabled(True)
-        self.btn_cancel.setObjectName("btn_cancel")
-        self.horizontalLayout.addWidget(self.btn_cancel)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -42,7 +38,6 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.content.setText(_translate("Dialog", "Informations incomplètes."))
         self.btn_ok.setText(_translate("Dialog", "OK"))
-        self.btn_cancel.setText(_translate("Dialog", "Annuler"))
 
 
 if __name__ == "__main__":

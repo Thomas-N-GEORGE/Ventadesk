@@ -2,22 +2,7 @@
 
 import json
 import requests
-
-# >>> import requests
-# >>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))
-# >>> r.status_code
-# 200
-# >>> r.headers['content-type']
-# 'application/json; charset=utf8'
-# >>> r.encoding
-# 'utf-8'
-# >>> r.text
-# '{"authenticated": true, ...'
-# >>> r.json()
-# {'authenticated': True, ...}
-
-API_URL = "http://127.0.0.1:8000/api/"
-API_TOKEN_URL = "http://127.0.0.1:8000/api/api-token-auth/"
+from config import API_URL, API_TOKEN_URL
 
 
 def login(email, password):
@@ -39,6 +24,7 @@ def login(email, password):
                 token=response["token"],
                 user_id=response["user_id"],
                 email=response["email"],
+                password=password,
                 role=response["role"],
             )
 
@@ -49,25 +35,26 @@ def login(email, password):
     return False, None
 
 
-
 class User:
-    """User class."""
+    """User class built with API data."""
 
     def __init__(
         self,
         user_id,
         email,
+        password,
         role,
         token=None,
         first_name=None,
         last_name=None,
         reg_number=None,
-        conversation_set=None
+        conversation_set=None,
     ):
         """Initilaize."""
 
         self.user_id = user_id
         self.email = email
+        self.password = password
         self.role = role
         self.token = token
         self.first_name = first_name
@@ -79,9 +66,9 @@ class User:
         """Complete user info from api."""
 
         url = API_URL + "users/" + str(self.user_id)
-        headers = {'Authorization': f'token {self.token}'}
+        headers = {"Authorization": f"token {self.token}"}
         r = requests.get(url, headers=headers)
-        
+
         print("status : ", r.status_code)
         print("text : ", r.text)
         print("text type : ", type(r.text))
@@ -94,5 +81,64 @@ class User:
             self.conversation_set = response["conversation_set"]
 
             return True, self
-        
+
         return False, self
+
+
+def api_fetch_orders(app) -> dict:
+    """Retrieve orders related to employee, from API."""
+
+    url = API_URL + "user_orders/"
+    headers = {"Authorization": f"token {app.user.token}"}
+    data = {"username": f"{app.user.email}", "password": f"{app.user.password}"}
+    r = requests.get(url, headers=headers, data=data)
+
+    print("status : ", r.status_code)
+    print("text : ", r.text)
+    print("text type : ", type(r.text))
+
+    if r.status_code != 200:
+        return
+
+    return json.loads(r.text, strict=False)
+
+
+def api_update_order_status(app, order_id, new_status, comment) -> bool:
+    """POST new status and comment to order."""
+
+    url = API_URL + "comments/"
+    headers = {"Authorization": f"token {app.user.token}"}
+    # api fields : "content", "order_id"
+    data = {
+        "username": f"{app.user.email}",
+        "password": f"{app.user.password}",
+        "order_id": order_id,
+        "content": comment,
+    }
+    r = requests.post(url, headers=headers, data=data)
+
+    print("comment create status_code : ", r.status_code)
+    print("comment create : ", r.text)
+    print("text type : ", type(r.text))
+
+    if r.status_code != 201:    # created
+        return False
+
+    url = API_URL + "orders/" + str(order_id) + "/"
+    headers = {"Authorization": f"token {app.user.token}"}
+    # api fields : "status"
+    data = {
+        "username": f"{app.user.email}",
+        "password": f"{app.user.password}",
+        "status": new_status,
+    }
+    r = requests.put(url, headers=headers, data=data)
+
+    print("status update order : ", r.status_code)
+    print("text update order : ", r.text)
+    print("text type : ", type(r.text))
+
+    if r.status_code != 200:
+        return False
+
+    return True

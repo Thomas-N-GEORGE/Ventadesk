@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (
     QDialog,
 )
 
+from api_connect import api_update_order_status
 from pui.status_update_dialog import Ui_Dialog
 from pui.information import Ui_Dialog as Ui_Inf_Dialog
 from pui.connexion import Ui_Dialog as Ui_connect
@@ -12,11 +13,12 @@ from pui.connexion import Ui_Dialog as Ui_connect
 class StatusDialog(Ui_Dialog, QDialog):
     """Render compiled to Python status update dialog box."""
 
-    def __init__(self, order):
+    def __init__(self, app, order):
         super().__init__()
 
         self.setupUi(self)
         self.setup_links()
+        self.app = app
         self.order = order
         self.buttonBox.hide()
 
@@ -34,8 +36,8 @@ class StatusDialog(Ui_Dialog, QDialog):
             new_status = "CT"
         elif self.radio_status_EX.isChecked():
             new_status = "EX"
-        elif self.radio_status_NT.isChecked():
-            new_status = "NT"
+        elif self.radio_status_CR.isChecked():
+            new_status = "CR"
         elif self.radio_status_PE.isChecked():
             new_status = "PE"
         elif self.radio_status_TA.isChecked():
@@ -53,6 +55,8 @@ class StatusDialog(Ui_Dialog, QDialog):
     def update_order_status(self):
         """Send info to api module."""
 
+        is_updated = False
+
         if (
             self.comment_text_edit.toPlainText() == ""
             or self.get_status_from_checkboxes() is None
@@ -61,14 +65,32 @@ class StatusDialog(Ui_Dialog, QDialog):
                 "Informations non validées. Veuillez noter un commentaire et choisir un statut."
             )
             info.exec()
-            pass
 
         else:
             print(f'Order_id : {self.order["id"]}')
             print("new_status : ", self.get_status_from_checkboxes())
             print("new_comment : ", self.comment_text_edit.toPlainText())
 
+            is_updated = api_update_order_status(
+                app=self.app,
+                order_id=self.order["id"],
+                new_status=self.get_status_from_checkboxes(),
+                comment=self.comment_text_edit.toPlainText(),
+            )
+
+            if is_updated:
+                info_text = "Statut et commentaire envoyés avec succès."
+            else:
+                info_text = "Échec de la mise à jour de la commande."
+
+            info = InfoWindow(info_text)
+            info.exec()
+
         self.accept()
+
+        # refresh main app
+        if is_updated:
+            self.app.refresh() 
 
 
 class InfoWindow(Ui_Inf_Dialog, QDialog):
@@ -79,15 +101,14 @@ class InfoWindow(Ui_Inf_Dialog, QDialog):
 
         super().__init__()
         self.setupUi(self)
+        self.setModal(True)
         self.content.setText(text)
         self.setup_links()
-        self.btn_cancel.setDisabled(True)
 
     def setup_links(self):
         """Links."""
 
-        self.btn_ok.clicked.connect(self.done)
-        self.btn_cancel.clicked.connect(self.done)
+        self.btn_ok.clicked.connect(self.accept)
 
 
 class ConnectDialog(Ui_connect, QDialog):
@@ -98,6 +119,7 @@ class ConnectDialog(Ui_connect, QDialog):
 
         super().__init__()
         self.setupUi(self)
+        self.setModal(True)
         self.app = app
         # self.show()
         self.setup_links()
