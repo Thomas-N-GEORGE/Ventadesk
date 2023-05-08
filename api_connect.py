@@ -5,7 +5,7 @@ import requests
 from config import API_URL, API_TOKEN_URL
 
 
-def login(email, password):
+def api_login(email, password):
     """Login function to connect to VentAPI."""
 
     data = {"username": email, "password": password}
@@ -86,7 +86,7 @@ class User:
 
 
 def api_fetch_orders(app) -> dict:
-    """Retrieve orders related to employee, from API."""
+    """GET orders related to employee, from API."""
 
     url = API_URL + "user_orders/"
     headers = {"Authorization": f"token {app.user.token}"}
@@ -104,7 +104,7 @@ def api_fetch_orders(app) -> dict:
 
 
 def api_update_order_status(app, order_id, new_status, comment) -> bool:
-    """POST new status and comment to order."""
+    """POST new order comment and PUT new status to order."""
 
     url = API_URL + "comments/"
     headers = {"Authorization": f"token {app.user.token}"}
@@ -121,7 +121,7 @@ def api_update_order_status(app, order_id, new_status, comment) -> bool:
     print("comment create : ", r.text)
     print("text type : ", type(r.text))
 
-    if r.status_code != 201:    # created
+    if r.status_code != 201:  # created
         return False
 
     url = API_URL + "orders/" + str(order_id) + "/"
@@ -138,7 +138,66 @@ def api_update_order_status(app, order_id, new_status, comment) -> bool:
     print("text update order : ", r.text)
     print("text type : ", type(r.text))
 
-    if r.status_code != 200:
-        return False
+    return r.status_code == 200
 
-    return True
+def api_fetch_customer(app, customer_account):
+    """GET customer detail from API, querying by related customer account id."""
+
+    url = API_URL + "users/" + f'?customer_account={str(customer_account)}'
+    headers = {"Authorization": f'token {app.user.token}'}
+    data = {"username": f'{app.user.email}', "password": f'{app.user.password}'}
+    r = requests.get(url, headers=headers, data=data)
+
+    print("status : ", r.status_code)
+    print("text : ", r.text)
+    print("text type : ", type(r.text))
+
+    if r.status_code != 200:
+        return
+
+    return json.loads(r.text, strict=False)
+
+def api_fetch_conversation(app, customer):
+    """GET customer related conversation from API."""
+
+    # 
+    # if (
+    #     len(customer) == 0
+    #     or "conversation_set" not in customer
+    #     or len(customer["conversation_set"]) == 0
+    # ):
+    #     return
+
+    url = API_URL + "conversations/" + str(customer["conversation_set"][0])
+    headers = {"Authorization": f"token {app.user.token}"}
+    data = {"username": f'{app.user.email}', "password": f'{app.user.password}'}
+    r = requests.get(url, headers=headers, data=data)
+
+    print("status : ", r.status_code)
+    print("text : ", r.text)
+    print("text type : ", type(r.text))
+
+    if r.status_code != 200:
+        return
+
+    return json.loads(r.text, strict=False)
+
+def api_send_message(app, conversation, content) -> bool:
+    """POST API new message."""
+
+    url = API_URL + "messages/"
+    headers = {"Authorization": f"token {app.user.token}"}
+    # api fields : "content", "conversation_id", "author"
+    data = {
+        "username": f"{app.user.email}",
+        "password": f"{app.user.password}",
+        "conversation_id": conversation["id"],
+        "content": content,
+    }
+    r = requests.post(url, headers=headers, data=data)
+
+    print("comment create status_code : ", r.status_code)
+    print("comment create : ", r.text)
+    print("text type : ", type(r.text))
+
+    return r.status_code == 201  # created

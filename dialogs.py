@@ -61,7 +61,7 @@ class StatusDialog(Ui_Dialog, QDialog):
             self.comment_text_edit.toPlainText() == ""
             or self.get_status_from_checkboxes() is None
         ):
-            info = InfoWindow(
+            info = InfoDialog(
                 "Informations non validées. Veuillez noter un commentaire et choisir un statut."
             )
             info.exec()
@@ -83,7 +83,7 @@ class StatusDialog(Ui_Dialog, QDialog):
             else:
                 info_text = "Échec de la mise à jour de la commande."
 
-            info = InfoWindow(info_text)
+            info = InfoDialog(info_text)
             info.exec()
 
         self.accept()
@@ -93,7 +93,7 @@ class StatusDialog(Ui_Dialog, QDialog):
             self.app.refresh() 
 
 
-class InfoWindow(Ui_Inf_Dialog, QDialog):
+class InfoDialog(Ui_Inf_Dialog, QDialog):
     """information dialog window."""
 
     def __init__(self, text):
