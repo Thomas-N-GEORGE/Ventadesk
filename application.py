@@ -1,7 +1,5 @@
 """Our main window application."""
 
-
-import json
 from datetime import datetime
 from dateutil.parser import parse
 
@@ -13,17 +11,15 @@ from PyQt6.QtWidgets import (
     QListWidgetItem,
 )
 
-from pui.if_ventadesk2 import Ui_MainWindow
-from dialogs import StatusDialog, ConnectDialog, InfoDialog
-
 from api_connect import (
-    api_login,
-    api_fetch_orders,
-    api_fetch_customer,
     api_fetch_conversation,
+    api_fetch_customer,
+    api_fetch_orders,
+    api_login,
     api_send_message,
 )
-from orders_payload import ORDERS_PAYLOAD, CONVERSATION_PAYLOAD
+from dialogs.app_dialogs import ConnectDialog, InfoDialog, StatusDialog
+from pui.if_ventadesk2 import Ui_MainWindow
 from utils import status_full_name
 
 
@@ -65,6 +61,8 @@ class AppWindow(Ui_MainWindow, QMainWindow):
 
         self.is_logged, self.user = api_login(email=self.email, password=self.password)
         if self.is_logged:
+            self.clear_conversation()
+            self.tab_conversation.setEnabled(False)
             self.statusbar.showMessage(f"Connecté(e), bienvenue {self.user.first_name}")
             self.orders_load_and_display()
         else:
@@ -73,9 +71,12 @@ class AppWindow(Ui_MainWindow, QMainWindow):
     def orders_load_and_display(self):
         """Load orders and populate to display."""
 
+        # clear display
+        self.clear_orders()
+        
         orders = api_fetch_orders(self)
 
-        for order in orders["results"]:
+        for order in orders:
             # Order label
             label = QLabel()
             date = parse(order["date_created"])
@@ -83,11 +84,8 @@ class AppWindow(Ui_MainWindow, QMainWindow):
 
             # Order owner / customer.
             customer = api_fetch_customer(self, order["customer_account"])
-            if customer and customer["count"] > 0:
-                customer = customer["results"][0]
-                print(
-                    f'customer for {order["ref_number"]} : {customer["first_name"]} {customer["last_name"]}'
-                )
+            if customer and len(customer) > 0:
+                customer = customer[0]
                 customer_info = (
                     f'Client(e) : {customer["first_name"]} {customer["last_name"]}'
                 )
@@ -105,9 +103,6 @@ class AppWindow(Ui_MainWindow, QMainWindow):
             # Order owner / customer contact button.
             btn_contact = QPushButton()
             btn_contact.setText("contacter le client")
-            # see if we can deliver this owner / owner_id in API payload ??
-            # btn_contact.clicked.connect(lambda *_, o=order: self.open_order_conversation(o["owner"]))
-            # btn_contact.clicked.connect(lambda *_, o=order: self.conversation_load_and_display(o))
             btn_contact.clicked.connect(
                 lambda *_, c=customer: self.conversation_load_and_display(c)
             )
@@ -165,7 +160,7 @@ class AppWindow(Ui_MainWindow, QMainWindow):
 
         self.order_details.addItem("\n")
 
-        # Order line items
+        # Order line items.
         self.order_details.addItem("PRODUITS : ")
         for line_item in order["lineitem_set"]:
             item = QListWidgetItem()
@@ -177,7 +172,7 @@ class AppWindow(Ui_MainWindow, QMainWindow):
 
         self.order_details.addItem("\n")
 
-        # price details
+        # Price details.
         item = QListWidgetItem()
         item.setText(f'Prix total HT : {order["total_price"]}')
         item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
@@ -193,8 +188,13 @@ class AppWindow(Ui_MainWindow, QMainWindow):
         item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.order_details.addItem(item)
 
-        # update button target
-        self.btn_update_status.disconnect()
+        # Update button target.
+        try:
+            # Throws an exception if no signal / slot connexions
+            self.btn_update_status.disconnect()
+        except:
+            pass
+
         self.btn_update_status.clicked.connect(
             lambda *_, o=order: self.order_status_dialog(o)
         )
@@ -205,29 +205,23 @@ class AppWindow(Ui_MainWindow, QMainWindow):
         status_dialog = StatusDialog(self, order)
         status_dialog.exec()
 
-    def refresh(self):
-        """Clear and reload order and order detail windows."""
-
-        while not self.order_list_container.isEmpty():
-            item = self.order_list_container.takeAt(0)
-            item.widget().setParent(None)
-
-        self.order_details.clear()
-
-        self.login()
-
     def make_message_label(self, message: dict, customer: dict) -> QLabel:
-        """Construct label to display message."""
+        """Construct label to display a message."""
 
         label = QLabel()
         date = parse(message["date_created"])
         date_str = datetime.strftime(date, "%d-%m-%Y")
+
+        # Header.
         if message["author"] == self.user.email:
             author_wrote = "Vous avez écrit :"
         else:
             author_wrote = f'{customer["first_name"]} {customer["last_name"]} a écrit :'
+
+        # Whole message.
         m_text = f'\n{author_wrote}\n{message["content"]}\nle {date_str}\n'
         label.setText(m_text)
+        label.setWordWrap(True)
 
         return label
 
@@ -235,23 +229,16 @@ class AppWindow(Ui_MainWindow, QMainWindow):
         """Open conversation with customer tab."""
 
         # clear display
-        while not self.message_list_container.isEmpty():
-            item = self.message_list_container.takeAt(0)
-            item.widget().setParent(None)
+        self.clear_conversation()
 
         # Populate with messages and show conversation tab.
-        # conversation = json.loads(CONVERSATION_PAYLOAD, strict=False)
         conversation = api_fetch_conversation(self, customer=customer)
 
         self.label_conversation_title.setText(conversation["subject"])
 
         for message in conversation["message_set"]:
             label = self.make_message_label(message, customer)
-            if (
-                # message["author"] == "jean.lancien@ventalis.com"
-                message["author"]
-                == self.user.email
-            ):
+            if message["author"] == self.user.email:
                 label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
 
             self.message_list_container.layout().addWidget(label)
@@ -260,7 +247,12 @@ class AppWindow(Ui_MainWindow, QMainWindow):
         self.tabWidget.setCurrentWidget(self.tab_conversation)
 
         # connect send message button
-        self.btn_send_message.disconnect()
+        try:
+            # Throws an exception if no signal / slot connexions
+            self.btn_send_message.disconnect()
+        except:
+            pass
+
         self.btn_send_message.clicked.connect(
             lambda *_, co=conversation, cu=customer: self.send_message(co, cu)
         )
@@ -268,7 +260,6 @@ class AppWindow(Ui_MainWindow, QMainWindow):
     def send_message(self, conversation: dict, customer: dict):
         """Send message to customer."""
 
-        print(self.new_message_edit.toPlainText())
         message = self.new_message_edit.toPlainText()
 
         if message == "":
@@ -278,8 +269,33 @@ class AppWindow(Ui_MainWindow, QMainWindow):
         sent = api_send_message(self, conversation=conversation, content=message)
 
         if not sent:
+            # Note : API will refuse an empty message content
+            # so this condition will also be True.
             info_dialog = InfoDialog("Message non envoyé")
             info_dialog.exec()
         else:
+            # Reload : clear and relaod conversation.
             self.new_message_edit.clear()
             self.conversation_load_and_display(customer)
+
+    def clear_orders(self):
+        """Clear orders and order detail windows."""
+
+        while not self.order_list_container.isEmpty():
+            item = self.order_list_container.takeAt(0)
+            item.widget().setParent(None)
+
+        self.order_details.clear()
+        self.order_title.setText(f"Commande n°")
+        try:
+            # Throws an exception if no signal / slot connexions
+            self.btn_update_status.disconnect()
+        except:
+            pass
+
+    def clear_conversation(self):
+        """Clear display of conversation messages."""
+
+        while not self.message_list_container.isEmpty():
+            item = self.message_list_container.takeAt(0)
+            item.widget().setParent(None)
