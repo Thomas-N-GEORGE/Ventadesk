@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1115, 622)
+        MainWindow.resize(1280, 720)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 496, 512))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 578, 610))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_3 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 496, 238))
+        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 578, 336))
         self.scrollAreaWidgetContents_3.setObjectName("scrollAreaWidgetContents_3")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_3)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 515, 500))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 598, 598))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
@@ -111,7 +111,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addLayout(self.horizontalLayout_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1115, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 21))
         self.menubar.setObjectName("menubar")
         self.login_menu = QtWidgets.QMenu(parent=self.menubar)
         self.login_menu.setObjectName("login_menu")
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         self.order_title.setText(_translate("MainWindow", "Détail de la commande"))
         self.btn_update_status.setText(_translate("MainWindow", "Modifier le statut"))
         self.login_menu.setTitle(_translate("MainWindow", "Connexion"))
-        self.loginAct.setText(_translate("MainWindow", "Se connecter"))
+        self.loginAct.setText(_translate("MainWindow", "Se (re) connecter"))
         self.quitAct.setText(_translate("MainWindow", "Quitter"))
 
 

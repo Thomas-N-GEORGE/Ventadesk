@@ -14,8 +14,9 @@ class StatusDialog(Ui_Dialog, QDialog):
     """Render compiled to Python status update dialog box."""
 
     def __init__(self, app, order):
-        super().__init__()
+        """Initialize."""
 
+        super().__init__()
         self.setupUi(self)
         self.setup_links()
         self.app = app
@@ -23,7 +24,7 @@ class StatusDialog(Ui_Dialog, QDialog):
         self.buttonBox.hide()
 
     def get_status_from_checkboxes(self):
-        """Get new status from checkboxes"""
+        """Get new status from checkboxes."""
 
         new_status = None
         if self.radio_status_AA.isChecked():
@@ -57,6 +58,7 @@ class StatusDialog(Ui_Dialog, QDialog):
 
         is_updated = False
 
+        # Send only if non-empty comment text and status choice selected.
         if (
             self.comment_text_edit.toPlainText() == ""
             or self.get_status_from_checkboxes() is None
@@ -67,10 +69,6 @@ class StatusDialog(Ui_Dialog, QDialog):
             info.exec()
 
         else:
-            print(f'Order_id : {self.order["id"]}')
-            print("new_status : ", self.get_status_from_checkboxes())
-            print("new_comment : ", self.comment_text_edit.toPlainText())
-
             is_updated = api_update_order_status(
                 app=self.app,
                 order_id=self.order["id"],
@@ -88,9 +86,10 @@ class StatusDialog(Ui_Dialog, QDialog):
 
         self.accept()
 
-        # refresh main app
+        # reload in main app
         if is_updated:
-            self.app.refresh() 
+            # self.app.login()
+            self.app.orders_load_and_display()
 
 
 class InfoDialog(Ui_Inf_Dialog, QDialog):
@@ -121,7 +120,6 @@ class ConnectDialog(Ui_connect, QDialog):
         self.setupUi(self)
         self.setModal(True)
         self.app = app
-        # self.show()
         self.setup_links()
 
     def setup_links(self):
