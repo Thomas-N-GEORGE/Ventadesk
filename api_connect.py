@@ -3,7 +3,9 @@
 import json
 import requests
 
+
 from config import API_URL, API_TOKEN_URL
+from dialogs.info_dialog import InfoDialog
 from dialogs.info_dialog import InfoDialog
 
 
@@ -44,6 +46,11 @@ class User:
         except:
             api_connexion_error_dialog()
             return False, self
+        try:
+            r = requests.get(url, headers=headers)
+        except:
+            api_connexion_error_dialog()
+            return False, self
 
         if r.status_code == 200:
             response = json.loads(r.text, strict=False)
@@ -55,6 +62,48 @@ class User:
             return True, self
 
         return False, self
+
+
+def api_connexion_error_dialog(message="Erreur de connexion distante."):
+    """Message box."""
+
+    info_dialog = InfoDialog(message)
+    info_dialog.exec()
+
+
+def api_login(email, password):
+    """Login function to connect to VentAPI."""
+
+    data = {"username": email, "password": password}
+    try:
+        r = requests.post(API_TOKEN_URL, data=data)
+    except:
+        api_connexion_error_dialog()
+        return False, None
+
+    if r.status_code != 200:
+        return False, None
+
+    response = json.loads(r.text, strict=False)
+
+    # Check if user has employee role
+    if response["role"] != "EMPLOYEE":
+        return False, None
+
+    user = User(
+        token=response["token"],
+        user_id=response["user_id"],
+        email=response["email"],
+        password=password,
+        role=response["role"],
+    )
+
+    # Fetch remaining user info from API.
+    is_completed, user = user.api_complete_user()
+    if is_completed:
+        return True, user
+
+    return False, None
 
 
 def api_connexion_error_dialog(message="Erreur de connexion distante."):
@@ -131,6 +180,11 @@ def api_update_order_status(app, order_id, new_status, comment) -> bool:
     except:
         api_connexion_error_dialog()
         return False
+    try:
+        r = requests.post(url, headers=headers, data=data)
+    except:
+        api_connexion_error_dialog()
+        return False
 
     if r.status_code != 201:  # created
         return False
@@ -163,6 +217,7 @@ def api_fetch_customer(app, customer_account):
     return json.loads(r.text, strict=False)
 
 
+
 def api_fetch_conversation(app, customer):
     """GET customer related conversation from API."""
 
@@ -180,6 +235,7 @@ def api_fetch_conversation(app, customer):
     return json.loads(r.text, strict=False)
 
 
+
 def api_send_message(app, conversation, content) -> bool:
     """POST API new message."""
 
@@ -190,6 +246,11 @@ def api_send_message(app, conversation, content) -> bool:
         "conversation_id": conversation["id"],
         "content": content,
     }
+    try:
+        r = requests.post(url, headers=headers, data=data)
+    except:
+        api_connexion_error_dialog()
+        return
     try:
         r = requests.post(url, headers=headers, data=data)
     except:
