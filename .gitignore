@@ -20,6 +20,7 @@ orders_payload.*
 htmlcov/
 
 # Deploy
-#dist/
-#build/
+dist/
+build/
+*.spec
 #*.egg-info/

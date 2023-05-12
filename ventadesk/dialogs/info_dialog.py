@@ -4,7 +4,7 @@
 from PyQt6.QtWidgets import (
     QDialog,
 )
-from pui.information import Ui_Dialog
+from ..pui.information import Ui_Dialog
 
 class InfoDialog(Ui_Dialog, QDialog):
     """information dialog window."""

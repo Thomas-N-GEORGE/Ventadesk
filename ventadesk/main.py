@@ -7,7 +7,10 @@ from PyQt6.QtWidgets import (
 import os
 import sys
 
-from application import AppWindow
+basedir = os.path.dirname(__file__)
+
+# from application import AppWindow
+from .application import AppWindow
 
 
 def main():

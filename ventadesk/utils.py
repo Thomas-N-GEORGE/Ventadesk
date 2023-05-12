@@ -1,6 +1,6 @@
 """Utilities module."""
 
-from config import STATUS_CHOICES
+from .config import STATUS_CHOICES
 
 
 def status_full_name(short_name: str) -> str:

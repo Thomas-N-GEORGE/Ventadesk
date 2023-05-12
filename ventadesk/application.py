@@ -11,16 +11,16 @@ from PyQt6.QtWidgets import (
     QListWidgetItem,
 )
 
-from api_connect import (
+from .api_connect import (
     api_fetch_conversation,
     api_fetch_customer,
     api_fetch_orders,
     api_login,
     api_send_message,
 )
-from dialogs.app_dialogs import ConnectDialog, InfoDialog, StatusDialog
-from pui.if_ventadesk2 import Ui_MainWindow
-from utils import status_full_name
+from .dialogs.app_dialogs import ConnectDialog, InfoDialog, StatusDialog
+from .pui.if_ventadesk2 import Ui_MainWindow
+from .utils import status_full_name
 
 
 class AppWindow(Ui_MainWindow, QMainWindow):
