@@ -4,9 +4,9 @@ import json
 import requests
 
 
-from config import API_URL, API_TOKEN_URL
-from dialogs.info_dialog import InfoDialog
-from dialogs.info_dialog import InfoDialog
+from .config import API_URL, API_TOKEN_URL
+from .dialogs.info_dialog import InfoDialog
+from .dialogs.info_dialog import InfoDialog
 
 
 class User:

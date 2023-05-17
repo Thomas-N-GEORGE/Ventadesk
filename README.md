@@ -4,17 +4,18 @@ Application de bureau de gestion des commandes.
 Accompagne l'application Web Ventashop.
 Destinée aux employés de Ventalis.
 
-## Comment installer Ventadesk en local : 
+
 ---
 
-### Solution 1 (prochainement) : distribution.
+## Distribution :
 
- - Vous pourrez bientôt télécharger le fichier exécutable correspondant à votre plateforme depuis ce dépôt.
+ - Vous pouvez lancer l'exécutable correspondant à votre plateforme dans la release 1.0 de ce dépôt Github.
 
- - Sera disponible pour les platefomes MacOS et Windows
+ - Sera bientôt disponible pour Windows.
 ---
+## Code source : 
 
-### Solution 2 : code source.
+### Comment installer Ventadesk en local : 
 
 0. Pré-requis : 
  - Avoir installé Python v10. ou plus sur la machine locale. https://www.python.org/downloads/
@@ -34,7 +35,7 @@ $ cd Ventadesk
 ````
 2. Créer un environnement virtuel (ici nommé *env* ) à l'aide de la commande : 
 ````
-$ python venv env
+$ python3 -m venv env
 ````
 
 3. Activer l'environnement virtuel à l'aide de la commande : 
@@ -58,5 +59,5 @@ $ source env\bin\activate.bat
 
 5. Lancer l'application : 
 ````
-(env) $ python3 main.py
+(env) $ python3 cli.py
 ````

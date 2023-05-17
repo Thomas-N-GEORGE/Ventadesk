@@ -4,10 +4,10 @@ from PyQt6.QtWidgets import (
     QDialog,
 )
 
-from api_connect import api_update_order_status
-from pui.status_update_dialog import Ui_Dialog
-from pui.information import Ui_Dialog as Ui_Inf_Dialog
-from pui.connexion import Ui_Dialog as Ui_connect
+from ..api_connect import api_update_order_status
+from ..pui.status_update_dialog import Ui_Dialog
+from ..pui.information import Ui_Dialog as Ui_Inf_Dialog
+from ..pui.connexion import Ui_Dialog as Ui_connect
 
 
 class StatusDialog(Ui_Dialog, QDialog):
