@@ -11,7 +11,6 @@ Destinée aux employés de Ventalis.
 
  - Vous pouvez lancer l'exécutable correspondant à votre plateforme dans la release 1.0 de ce dépôt Github.
 
- - Sera bientôt disponible pour Windows.
 ---
 ## Code source : 
 
@@ -26,38 +25,39 @@ Destinée aux employés de Ventalis.
  - Dans un terminal, se placer à l'emplacement local où l'on veut que le dossier source soit cloné.
  - Exécuter la commande git clone : 
 ````
-$ git clone https://github.com/Thomas-N-GEORGE/Ventadesk.git
+ git clone https://github.com/Thomas-N-GEORGE/Ventadesk.git
 ````
 
  - En principe un dossier nommé Ventadesk s'est crée. S'y déplacer : 
 ````
-$ cd Ventadesk
+ cd Ventadesk
 ````
 2. Créer un environnement virtuel (ici nommé *env* ) à l'aide de la commande : 
 ````
-$ python3 -m venv env
+ python3 -m venv env
 ````
 
 3. Activer l'environnement virtuel à l'aide de la commande : 
  
 * pour les plateformes Unix/Linux : 
 ````
-$ source env/bin/activate
+ source env/bin/activate
 ````
 
 * pour la plateforme Windows (cmd.exe):
 ````
-$ source env\bin\activate.bat
+ source env/scripts/activate
 ````
  * autre : consulter https://docs.python.org/3/library/venv.html
 
+Votre invite de commande doit maintenant être précédée de `(env)`, vous indiquant que vous êtes bien dans l'environnement virtuel.
 
 4. Installer les dépendances du projet : 
 ````
-(env) $ pip install -r requirements.txt
+pip install -r requirements.txt
 ````
 
 5. Lancer l'application : 
 ````
-(env) $ python3 cli.py
+python3 cli.py
 ````
