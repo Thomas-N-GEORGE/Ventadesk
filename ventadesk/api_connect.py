@@ -251,10 +251,5 @@ def api_send_message(app, conversation, content) -> bool:
     except:
         api_connexion_error_dialog()
         return
-    try:
-        r = requests.post(url, headers=headers, data=data)
-    except:
-        api_connexion_error_dialog()
-        return
 
     return r.status_code == 201  # created
