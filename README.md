@@ -9,7 +9,7 @@ Destinée aux employés de Ventalis.
 
 ## Distribution :
 
- - Vous pouvez lancer l'exécutable correspondant à votre plateforme dans la release 1.0 de ce dépôt Github.
+ - Vous pouvez trouver l'exécutable correspondant à votre plateforme dans la release 1.0 de ce dépôt Github.
 
 ---
 ## Code source : 
